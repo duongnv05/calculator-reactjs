@@ -133,7 +133,7 @@ export default class Calculator extends Component {
         {/* screen control */}
         <div className="screen-control">
           {/* result control */}
-          <div className="result">
+          <div className="result" title={result}>
             { result }
           </div>
           <div className="content-calculator">
@@ -143,7 +143,7 @@ export default class Calculator extends Component {
         {/* button controls */}
         <div className="button-control">
           <div className="wrapper">
-            <button className="btn-control merce-3-row" 
+            <button className="btn-control merce-3-row clear" 
               onTouchStart={this.onTouchStartClear} 
               onTouchEnd={this.onTouchEndClear} 
               onMouseDown={this.onTouchStartClear} 
@@ -152,19 +152,19 @@ export default class Calculator extends Component {
             >
               Clear
             </button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('/')}>/</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('7')}>7</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('8')}>8</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('9')}>9</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('-')}>-</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('4')}>4</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('5')}>5</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('6')}>6</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('+')}>+</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('1')}>1</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('2')}>2</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('3')}>3</button>
-            <button className="btn-control" onClick={()=>this.onInputCalculator('=')}>=</button>
+            <button className="btn-control /" onClick={()=>this.onInputCalculator('/')}>/</button>
+            <button className="btn-control 7" onClick={()=>this.onInputCalculator('7')}>7</button>
+            <button className="btn-control 8" onClick={()=>this.onInputCalculator('8')}>8</button>
+            <button className="btn-control 9" onClick={()=>this.onInputCalculator('9')}>9</button>
+            <button className="btn-control -" onClick={()=>this.onInputCalculator('-')}>-</button>
+            <button className="btn-control 4" onClick={()=>this.onInputCalculator('4')}>4</button>
+            <button className="btn-control 5" onClick={()=>this.onInputCalculator('5')}>5</button>
+            <button className="btn-control 6" onClick={()=>this.onInputCalculator('6')}>6</button>
+            <button className="btn-control +" onClick={()=>this.onInputCalculator('+')}>+</button>
+            <button className="btn-control 1" onClick={()=>this.onInputCalculator('1')}>1</button>
+            <button className="btn-control 2" onClick={()=>this.onInputCalculator('2')}>2</button>
+            <button className="btn-control 3" onClick={()=>this.onInputCalculator('3')}>3</button>
+            <button className="btn-control =" onClick={()=>this.onInputCalculator('=')}>=</button>
           </div>
         </div>
       </div>
