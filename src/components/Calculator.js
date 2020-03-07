@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import ListButton from './ListButton';
+
 import './Calculator.css';
 
 export default class Calculator extends Component {
@@ -13,9 +15,8 @@ export default class Calculator extends Component {
     this.onInputCalculator = this.onInputCalculator.bind(this);
     this.onClearButton = this.onClearButton.bind(this);
 
-    this.onTouchStartClear = this.onTouchStartClear.bind(this);
-    this.onTouchEndClear = this.onTouchEndClear.bind(this);
     this.onHandleKeyBoard = this.onHandleKeyBoard.bind(this);
+    this.onResetResult = this.onResetResult.bind(this);
   }
 
   componentDidMount() {
@@ -24,6 +25,13 @@ export default class Calculator extends Component {
 
   componentWillUnmount() {
     document.removeEventListener('keydown', this.onHandleKeyBoard);
+  }
+
+  onResetResult() {
+    this.setState({
+      content: '0',
+      result: '0'
+    })
   }
 
   onHandleKeyBoard(evt) {
@@ -52,21 +60,6 @@ export default class Calculator extends Component {
     }
   }
 
-  onTouchStartClear() {
-    this.btnClearTimer = setTimeout(() => {
-      this.setState({
-        content: '0',
-        result: '0'
-      });
-    }, 800)
-
-    this.onInputCalculator('clear');
-  }
-
-  onTouchEndClear() {
-    clearTimeout(this.btnClearTimer);
-  }
-
   onClearButton() {
     if(this.state.content == '0') return;
 
@@ -74,8 +67,6 @@ export default class Calculator extends Component {
     this.setState({
       content: (temp == '' ? '0' : temp)
     })
-
-    // this.onInputCalculator('clear');
   }
 
   onInputCalculator(val) {
@@ -142,30 +133,7 @@ export default class Calculator extends Component {
         </div>
         {/* button controls */}
         <div className="button-control">
-          <div className="wrapper">
-            <button className="btn-control merce-3-row clear" 
-              onTouchStart={this.onTouchStartClear} 
-              onTouchEnd={this.onTouchEndClear} 
-              onMouseDown={this.onTouchStartClear} 
-              onMouseUp={this.onTouchEndClear} 
-              onMouseLeave={this.onTouchEndClear}
-            >
-              Clear
-            </button>
-            <button className="btn-control /" onClick={()=>this.onInputCalculator('/')}>/</button>
-            <button className="btn-control 7" onClick={()=>this.onInputCalculator('7')}>7</button>
-            <button className="btn-control 8" onClick={()=>this.onInputCalculator('8')}>8</button>
-            <button className="btn-control 9" onClick={()=>this.onInputCalculator('9')}>9</button>
-            <button className="btn-control -" onClick={()=>this.onInputCalculator('-')}>-</button>
-            <button className="btn-control 4" onClick={()=>this.onInputCalculator('4')}>4</button>
-            <button className="btn-control 5" onClick={()=>this.onInputCalculator('5')}>5</button>
-            <button className="btn-control 6" onClick={()=>this.onInputCalculator('6')}>6</button>
-            <button className="btn-control +" onClick={()=>this.onInputCalculator('+')}>+</button>
-            <button className="btn-control 1" onClick={()=>this.onInputCalculator('1')}>1</button>
-            <button className="btn-control 2" onClick={()=>this.onInputCalculator('2')}>2</button>
-            <button className="btn-control 3" onClick={()=>this.onInputCalculator('3')}>3</button>
-            <button className="btn-control =" onClick={()=>this.onInputCalculator('=')}>=</button>
-          </div>
+          <ListButton content={content} onInput={this.onInputCalculator} onClearAll={this.onResetResult} />
         </div>
       </div>
     )
