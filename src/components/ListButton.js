@@ -2,9 +2,9 @@ import React from 'react';
 
 import { lsButton } from '../config';
 
-function ListButton(props) {
-  let btnClearTimer = null;
+let btnClearTimer = null;
 
+function ListButton(props) {
   function onTouchStartClear() {
     btnClearTimer = setTimeout(() => {
       props.onClearAll();
@@ -28,10 +28,9 @@ function ListButton(props) {
             key={button._id} 
             className={'btn-control ' + button.cClass || ''}
             onTouchStart={onTouchStartClear} 
-            onTouchEnd={onTouchEndClear} 
+            onTouchEnd={onTouchEndClear}
             onMouseDown={onTouchStartClear} 
             onMouseUp={onTouchEndClear} 
-            onMouseLeave={onTouchEndClear}
           >{button.label}</button> :
           <button 
             key={button._id} 
