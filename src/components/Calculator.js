@@ -69,13 +69,13 @@ function Calculator() {
   function onInputCalculator(val) {
     let _result = '0';
     let preState = content;
-    console.log("preState", preState)
+
     let futureState;
 
     if(preState == '0') { preState = '' }
 
     if(val == 'clear') {
-      futureState = preState.slice(0, preState.length - 1);
+      futureState = preState.toString().slice(0, preState.length - 1);
     } else {
       futureState = preState + val;
     }
@@ -91,11 +91,12 @@ function Calculator() {
     } else if(reResult.test(preState)) {
       _result = eval(preState);
     } else {
-      _result = eval(preState.slice(0, preState.length - 1))
+      _result = eval(preState.toString().slice(0, preState.length - 1))
     }
 
     if(val == '=') {
       //- handle calculating string content
+      // setContent(_result ? _result : '0')
       if(result === _result) return;
       
       setResult(_result ? _result : '0');
