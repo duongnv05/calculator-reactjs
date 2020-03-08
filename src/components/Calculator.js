@@ -1,32 +1,46 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+
+import ListButton from './ListButton';
 
 import './Calculator.css';
 
-export default class Calculator extends Component {
-  constructor() {
-    super();
-    this.state = {
-      content: '0',
-      result: '0'
-    };
+//- listen the 'keyboard' event
+function useEventListener(eventName, handler, element = window) {
+  const savedHandler = useRef();
 
-    this.onInputCalculator = this.onInputCalculator.bind(this);
-    this.onClearButton = this.onClearButton.bind(this);
+  useEffect(() => {
+    savedHandler.current = handler;
+  }, [handler]);
 
-    this.onTouchStartClear = this.onTouchStartClear.bind(this);
-    this.onTouchEndClear = this.onTouchEndClear.bind(this);
-    this.onHandleKeyBoard = this.onHandleKeyBoard.bind(this);
+  useEffect(
+    () => {
+      const isSupported = element && element.addEventListener;
+      if (!isSupported) return;
+      
+      const eventListener = event => savedHandler.current(event);
+      
+      element.addEventListener(eventName, eventListener);
+      
+      return () => {
+        element.removeEventListener(eventName, eventListener);
+      };
+    },
+    [eventName, element]
+  );
+}
+
+function Calculator() {
+  const [content, setContent] = useState('0');
+  const [result, setResult] = useState('0');
+
+  //- listener of remove event
+  useEventListener('keydown', onHandleKeyBoard);
+
+  function onResetResult() {
+    setContent('0');
+    setResult('0');
   }
-
-  componentDidMount() {
-    document.addEventListener('keydown', this.onHandleKeyBoard);
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener('keydown', this.onHandleKeyBoard);
-  }
-
-  onHandleKeyBoard(evt) {
+  function onHandleKeyBoard(evt) {
     switch(evt.key) {
       case '+':
       case '-':
@@ -41,46 +55,21 @@ export default class Calculator extends Component {
       case '7':
       case '8':
       case '9':
-        this.onInputCalculator(evt.key);
+        onInputCalculator(evt.key);
         break;
       case 'Backspace':
-        this.onInputCalculator('clear');
+        onInputCalculator('clear');
         break;
       case 'Enter':
-        this.onInputCalculator('=');
+        onInputCalculator('=');
         break;
     }
   }
 
-  onTouchStartClear() {
-    this.btnClearTimer = setTimeout(() => {
-      this.setState({
-        content: '0',
-        result: '0'
-      });
-    }, 800)
-
-    this.onInputCalculator('clear');
-  }
-
-  onTouchEndClear() {
-    clearTimeout(this.btnClearTimer);
-  }
-
-  onClearButton() {
-    if(this.state.content == '0') return;
-
-    let temp = this.state.content.slice(0, this.state.content.length - 1);
-    this.setState({
-      content: (temp == '' ? '0' : temp)
-    })
-
-    // this.onInputCalculator('clear');
-  }
-
-  onInputCalculator(val) {
+  function onInputCalculator(val) {
     let _result = '0';
-    let preState = this.state.content;
+    let preState = content;
+    console.log("preState", preState)
     let futureState;
 
     if(preState == '0') { preState = '' }
@@ -107,10 +96,9 @@ export default class Calculator extends Component {
 
     if(val == '=') {
       //- handle calculating string content
-      this.setState({
-        // content: _result,
-        result: _result ? _result : '0'
-      });
+      if(result === _result) return;
+      
+      setResult(_result ? _result : '0');
       return;
     }
 
@@ -120,54 +108,28 @@ export default class Calculator extends Component {
 
     if(!re.test(futureState)) return;
 
-    this.setState({
-      content: futureState,
-      result: _result
-    });
+    setContent(futureState);
+    setResult(_result);
   }
 
-  render() {
-    const { content, result } = this.state;
-    return (
-      <div className="_calculator">
-        {/* screen control */}
-        <div className="screen-control">
-          {/* result control */}
-          <div className="result" title={result}>
-            { result }
-          </div>
-          <div className="content-calculator">
-            { content }
-          </div>
+  return (
+    <div className="_calculator">
+      {/* screen control */}
+      <div className="screen-control">
+        {/* result control */}
+        <div className="result" title={result}>
+          { result }
         </div>
-        {/* button controls */}
-        <div className="button-control">
-          <div className="wrapper">
-            <button className="btn-control merce-3-row clear" 
-              onTouchStart={this.onTouchStartClear} 
-              onTouchEnd={this.onTouchEndClear} 
-              onMouseDown={this.onTouchStartClear} 
-              onMouseUp={this.onTouchEndClear} 
-              onMouseLeave={this.onTouchEndClear}
-            >
-              Clear
-            </button>
-            <button className="btn-control /" onClick={()=>this.onInputCalculator('/')}>/</button>
-            <button className="btn-control 7" onClick={()=>this.onInputCalculator('7')}>7</button>
-            <button className="btn-control 8" onClick={()=>this.onInputCalculator('8')}>8</button>
-            <button className="btn-control 9" onClick={()=>this.onInputCalculator('9')}>9</button>
-            <button className="btn-control -" onClick={()=>this.onInputCalculator('-')}>-</button>
-            <button className="btn-control 4" onClick={()=>this.onInputCalculator('4')}>4</button>
-            <button className="btn-control 5" onClick={()=>this.onInputCalculator('5')}>5</button>
-            <button className="btn-control 6" onClick={()=>this.onInputCalculator('6')}>6</button>
-            <button className="btn-control +" onClick={()=>this.onInputCalculator('+')}>+</button>
-            <button className="btn-control 1" onClick={()=>this.onInputCalculator('1')}>1</button>
-            <button className="btn-control 2" onClick={()=>this.onInputCalculator('2')}>2</button>
-            <button className="btn-control 3" onClick={()=>this.onInputCalculator('3')}>3</button>
-            <button className="btn-control =" onClick={()=>this.onInputCalculator('=')}>=</button>
-          </div>
+        <div className="content-calculator">
+          { content }
         </div>
       </div>
-    )
-  }
+      {/* button controls */}
+      <div className="button-control">
+        <ListButton content={content} onInput={onInputCalculator} onClearAll={onResetResult} />
+      </div>
+    </div>
+  );
 }
+
+export default Calculator;
